@@ -1,3 +1,6 @@
+#ifndef __SERIAL_H
+#define __SERIAL_H
+
 #include <windows.h>
 
 class Serial
@@ -20,9 +23,16 @@ class Serial
 			BYTE ByteSize,		// 通信字节位数，4—8
 			BYTE Parity, 		//指定奇偶校验方法。此成员可以有下列值：
 			BYTE StopBits 		//指定停止位的位数。
-			);	
-		
+			);
 		int num_of_input();
+
+		~Serial()
+		{
+			CloseHandle(this->hCom);
+		}
+
+		Serial();
+
 
 		HANDLE hCom;
 
@@ -114,3 +124,24 @@ bool Serial::WriteCom(char *write,int num)
 		return true;
 	}
 }
+
+
+Serial::Serial()
+{
+	this->dcb.BaudRate = 9600;
+	this->dcb.fParity = 0;
+	this->dcb.ByteSize = 8;
+	this->dcb.Parity = NOPARITY;
+	this->dcb.StopBits = ONESTOPBIT;
+	SetCommState(this->hCom,&this->dcb);
+
+	this->TimeOuts.ReadIntervalTimeout = 1000;
+	this->TimeOuts.ReadTotalTimeoutMultiplier = 500;
+	this->TimeOuts.ReadTotalTimeoutConstant	= 5000;
+        this->TimeOuts.WriteTotalTimeoutMultiplier = 500;
+        this->TimeOuts.WriteTotalTimeoutConstant = 2000;
+	SetCommTimeouts(this->hCom,&this->TimeOuts);
+}
+
+
+#endif

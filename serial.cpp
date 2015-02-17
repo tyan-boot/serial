@@ -14,7 +14,14 @@ int main(int argc,char **argv)
 
 	Serial com;
 	
-	com.openCom((char*)COM);
+	if (com.openCom((char*)COM))
+	{
+		std::cout<<"打开成功"<<std::endl;
+	}else
+	{
+		std::cout<<"打开失败"<<std::endl;
+	}
+
 	SetupComm(com.hCom,1024,1024);
 
 	com.setTimeOut(1000,500,5000,500,2000);
@@ -26,10 +33,10 @@ int main(int argc,char **argv)
 
 	if (com.ReadCom(tmp,1))
 	{
-		std::cout<<"打开成功"<<std::endl;
+		std::cout<<"读取成功"<<std::endl;
 	}else
 	{
-		std::cerr<<"打开失败"<<std::endl;
+		std::cerr<<"读取失败"<<std::endl;
 	}
 
 	std::cout<<tmp[0]<<std::endl;
